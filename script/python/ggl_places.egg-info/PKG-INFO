@@ -1,0 +1,8 @@
+Metadata-Version: 2.1
+Name: ggl-places
+Version: 0.2
+Summary: A simple script to read and write geoserver layer
+Home-page: https://github.com/jdev-org/ggl-places.git
+Author: jdev
+Author-email: 
+Classifier: Programming Language :: Python :: 3
