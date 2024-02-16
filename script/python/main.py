@@ -1,7 +1,21 @@
 import requests
 
 GEOSERVER_URL = "https://edp.jdev.fr/geoserver/edp/ows"
-LAYER_NAME = "edp:fontaines"
-URL = "%s?service=WFS&version=1.0.0&request=GetFeature&typeName=%s&outputFormat=application%2Fjson"(GEOSERVER_URL, LAYER_NAME)
+LAYER_NAME = "edp:commerce"
+URL = GEOSERVER_URL + "?service=WFS&version=1.0.0&request=GetFeature&typeName=" + LAYER_NAME + "&outputFormat=application%2Fjson"
 
-x = requests.get(URL)
+from requests.auth import HTTPBasicAuth
+
+headers = {'Accept': 'application/json'}
+
+auth = HTTPBasicAuth('', '')
+
+response = requests.get(URL, auth=auth, headers=headers)
+
+responseJson = response.json()
+features = responseJson["features"]
+
+for feature in responseJson["features"]:
+    props = feature["properties"]
+    place_id = props["google_id"]
+
