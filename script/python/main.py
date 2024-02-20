@@ -1,22 +1,24 @@
-import requests, pandas
+import requests, pandas, os
 from requests.auth import HTTPBasicAuth
 
 # change DEV by True to limit request by 5 max. This avoid to many API request and to many cash flow
 DEV = False
 
 # Change this path to save file as needed
-OUTPUT_CSV_PATH = "/home/user/tmp/place_hours.csv"
+OUTPUT_CSV_PATH = os.getenv('GGl_PLACES_CSV')
 
 # To replace by your own API key
-GGL_API_KEY = "KEY-TO-CHANGE"
+GGL_API_KEY = os.getenv('GGL_API_KEY')
 # To replace by your own geoserver user name to request auth
-GEOSERVER_USER = "USER-TO-CHANGE"
+GEOSERVER_USER = os.getenv('EDP_GEOSERVER_USER')
 # To replace by your own geoserver user password to request auth
-GEOSERVER_PWD = "PASSWORD-TO-CHANGE"
+GEOSERVER_PWD = os.getenv('EDP_GEOSERVER_PASSWORD')
 # To replace by your own geoserver URL
-GEOSERVER_URL = "https://edp.jdev.fr/geoserver/edp/ows"
+# "https://edp.jdev.fr/geoserver/edp/ows"
+GEOSERVER_URL = os.getenv('EDP_GEOSERVER_URL')
 # Adapt layer name
-LAYER_NAME = "edp:commerce"
+# "edp:commerce"
+LAYER_NAME = os.getenv('EDP_COMMERCE_LAYER')
 
 URL = (
     GEOSERVER_URL
