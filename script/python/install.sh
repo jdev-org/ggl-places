@@ -6,7 +6,9 @@ env_py_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 echo $env_py_dir
 
-apt install python3 python3-pip python3-venv
+# Install OS packages
+apt install python3 python3-pip python3-venv gdal-bin
+# Install virtualenv python package
 pip3 install virtualenv
 
 if [ -d "$env_py_dir/.venv" ]; then
