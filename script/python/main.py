@@ -100,7 +100,7 @@ Loop over features to get each API places infos by feature place id
 '''
 i = 0
 for feature in responseJson["features"]:
-    if i > 1 and DEV is True:
+    if i > 0 and DEV is True:
         break
     props = feature["properties"]
     place_id = props["google_id"]
