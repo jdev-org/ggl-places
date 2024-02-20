@@ -64,7 +64,7 @@ Note that :
 3_close: [1020] -> Wednesday : close at 17h
 ```
 
-## Explain
+## How to read open/close periods ?
 
 A restaurant is open the monday on 2 periods : 12h-14h and 19h-22h.
 In minutes, this will be : 720-840 and 1140-1320
