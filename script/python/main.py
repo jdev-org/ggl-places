@@ -3,7 +3,7 @@ from requests.auth import HTTPBasicAuth
 
 # change DEV by True to limit request by 5 max. This avoid to many API request and to many cash flow
 DEV = False
-
+print("PYTHON PROCESS.....START")
 # Change this path to save file as needed
 OUTPUT_CSV_PATH = os.getenv('GGl_PLACES_CSV')
 
@@ -100,7 +100,7 @@ Loop over features to get each API places infos by feature place id
 '''
 i = 0
 for feature in responseJson["features"]:
-    if i > 5 and DEV is True:
+    if i > 1 and DEV is True:
         break
     props = feature["properties"]
     place_id = props["google_id"]
@@ -115,4 +115,6 @@ for feature in responseJson["features"]:
 # create dataframe
 dataframe = pandas.json_normalize(rows)
 # save CSV file
+print("SAVE CSV : " + OUTPUT_CSV_PATH)
 dataframe.to_csv(OUTPUT_CSV_PATH, encoding='utf-8')
+print("PYTHON PROCESS.....FINISH")
