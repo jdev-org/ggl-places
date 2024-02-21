@@ -24,7 +24,7 @@ https://github.com/jdev-org/ggl-places/blob/main/script/python/install.sh
 
 First, open `start.sh` and change environment variables values :
 
-https://github.com/jdev-org/ggl-places/blob/0d72c1bfaf06646104f52a7aa0cbf8b1e68a77f7/start.sh#L9-L18
+https://github.com/jdev-org/ggl-places/blob/334ca1541ec7ddac26489b32a7a8462db64b9934/start.sh#L13-L22
 
 Next, you can start the process with this (Linux) command :
 
