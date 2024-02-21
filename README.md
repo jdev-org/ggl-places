@@ -1,6 +1,6 @@
 > This scripts works with Linux
 
-> You need to adapt `.sh` scripts to works out of Linix O
+> You need to adapt `.sh` scripts to works out of Linix OS
 
 # ggl-places
 
