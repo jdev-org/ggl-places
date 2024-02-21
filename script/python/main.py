@@ -1,24 +1,34 @@
-import requests, pandas, os
+import requests, pandas, os, sys, json, logging
 from requests.auth import HTTPBasicAuth
+from places_utils import create_row, get_places_to_json, get_error_place_to_json
+from const import ENCODING
 
-# change DEV by True to limit request by 5 max. This avoid to many API request and to many cash flow
-DEV = False
-print("PYTHON PROCESS.....START")
+logging.basicConfig(format="%(asctime)s %(message)s", datefmt="%m/%d/%Y %I:%M:%S ")
+
+LIMIT = None
+if len(sys.argv) > 1 and sys.argv[1]:
+    # change DEV by True to limit request by 5 max. This avoid to many API request and to many cash flow
+    LIMIT = int(sys.argv[1])
+
+logging.info("PYTHON PROCESS.....START")
 # Change this path to save file as needed
-OUTPUT_CSV_PATH = os.getenv('GGl_PLACES_CSV')
-
+OUTPUT_CSV_PATH = os.getenv("GGl_PLACES_CSV")
+# JSON File
+OUTPUT_JSON_PATH = os.getenv("GGl_PLACES_JSON")
+# Will contains ids not processed because of no google place id
+OUTPUT_JSON_PATH_ERROR = OUTPUT_JSON_PATH + ".error.json"
 # To replace by your own API key
-GGL_API_KEY = os.getenv('GGL_API_KEY')
+GGL_API_KEY = os.getenv("GGL_API_KEY")
 # To replace by your own geoserver user name to request auth
-GEOSERVER_USER = os.getenv('EDP_GEOSERVER_USER')
+GEOSERVER_USER = os.getenv("EDP_GEOSERVER_USER")
 # To replace by your own geoserver user password to request auth
-GEOSERVER_PWD = os.getenv('EDP_GEOSERVER_PASSWORD')
+GEOSERVER_PWD = os.getenv("EDP_GEOSERVER_PASSWORD")
 # To replace by your own geoserver URL
 # "https://edp.jdev.fr/geoserver/edp/ows"
-GEOSERVER_URL = os.getenv('EDP_GEOSERVER_URL')
+GEOSERVER_URL = os.getenv("EDP_GEOSERVER_URL")
 # Adapt layer name
 # "edp:commerce"
-LAYER_NAME = os.getenv('EDP_COMMERCE_LAYER')
+LAYER_NAME = os.getenv("EDP_COMMERCE_LAYER")
 
 URL = (
     GEOSERVER_URL
@@ -26,18 +36,6 @@ URL = (
     + LAYER_NAME
     + "&outputFormat=application%2Fjson"
 )
-
-rows = []
-days = {
-    1: "lundi",
-    2: "mardi",
-    3: "mercredi",
-    4: "jeudi",
-    5: "vendredi",
-    6: "samedi",
-    8: "dimanche",
-}
-
 
 # Request with authent info
 headers = {"Accept": "application/json"}
@@ -47,74 +45,65 @@ response = requests.get(URL, auth=auth, headers=headers)
 responseJson = response.json()
 features = responseJson["features"]
 
+api_response_json = {"markets": []}
 
-'''
-Create API URL request
-'''
-def get_url(place_id):
-    place_api_url = "https://places.googleapis.com/v1/places/" + place_id
-    place_api_url += "?fields=id,displayName,regularOpeningHours,location"
-    place_api_url += "&key=" + GGL_API_KEY
-    return place_api_url
+"""
+Loop over features to create json with API places infos
+And open created file.
+"""
+if not os.path.exists(OUTPUT_JSON_PATH):
+    get_places_to_json(features, OUTPUT_JSON_PATH, LIMIT)
 
-'''
-Read API response and format to CSV row
-'''
-def create_json(details_json):
-    regOpeningHours = details_json["regularOpeningHours"]
-    periods = regOpeningHours["periods"]
-    json_place = {
-        "latitude": details_json["location"]["latitude"],
-        "longitude": details_json["location"]["longitude"],
-        "name": details_json["displayName"]["text"],
-        "id": details_json["id"],
-        "weekdescribe": regOpeningHours["weekdayDescriptions"]
-    }
-    for period in periods:
-        # day number
-        day_number = period["open"]["day"]
-        field_open = str(day_number) + "_open"
-        field_close = str(day_number) + "_close"
-        # convert time to minutes (12h30 -> 12h*60min +30 -> 750 min)
-        # this allow to find easily if opening now. Field name contain day value (e.g 3 is Wednesday).
-        # ========
-        # Example :
-        # ========
-        # A restaurant is open from 12h30 (750 min) to 14h30 (870 min) 
-        # If we request at 13h00 (780 min) a wednesday if restaurant is open :
-        # YES -> 750 <= 780 <= 870 -> Restaurant is open at this time !
+json_places_file = open(OUTPUT_JSON_PATH)
+places_data = json.load(json_places_file)
+places = places_data["places"]
 
-        minutes_open = (period["open"]["hour"]*60) + period["open"]["minute"]
-        minutes_close = (period["close"]["hour"]*60) + period["close"]["minute"]
-        if not field_open in json_place:
-            json_place[field_open] = []
-        if not field_close in json_place:
-            json_place[field_close] = []
-        json_place[field_open].append(minutes_open)
-        json_place[field_close].append(minutes_close)
+"""
+Loop over features to get features without API place id.
+The features will not be processed.
 
-    return json_place
+"""
+wrong_places_id = []
+if "places_error" in places_data:
+    places_error = places_data["places_error"]
+    for wrong_place in places_error:
+        wrong_places_id.append(wrong_place["id"])
+else:
+    places_error = []
+get_error_place_to_json(features, places_error, OUTPUT_JSON_PATH_ERROR)
 
-'''
+
+"""
 Loop over features to get each API places infos by feature place id
-'''
+"""
 i = 0
-for feature in responseJson["features"]:
-    if i > 0 and DEV is True:
-        break
+rows = []
+for feature in features:
     props = feature["properties"]
+    location = {"longitude": props["lon"], "latitude": props["lat"]}
     place_id = props["google_id"]
-    request_url = get_url(place_id)
-    response_details = requests.get(request_url)
-    details_json = response_details.json()
-    if "regularOpeningHours" in details_json:
-        row = create_json(details_json)
+    if not place_id or place_id in wrong_places_id:
+        continue
+
+    # get place info from json
+    def find_place(read_place):
+        return read_place["id"] == place_id
+
+    place_result = filter(find_place, places)
+    place_list = list(place_result)
+    # Warning : will be not found if feature place ID was not processed (LIMIT param)
+    if not place_list:
+        continue
+    place = place_list[0]
+    place["location"] = location
+
+    if "regularOpeningHours" in place:
+        row = create_row(place)
         rows.append(row)
-    i+=1
 
 # create dataframe
 dataframe = pandas.json_normalize(rows)
 # save CSV file
-print("SAVE CSV : " + OUTPUT_CSV_PATH)
-dataframe.to_csv(OUTPUT_CSV_PATH, encoding='utf-8')
-print("PYTHON PROCESS.....FINISH")
+logging.info("SAVE CSV : " + OUTPUT_CSV_PATH)
+dataframe.to_csv(OUTPUT_CSV_PATH, encoding=ENCODING)
+logging.info("PYTHON PROCESS.....FINISH")

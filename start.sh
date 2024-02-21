@@ -1,11 +1,13 @@
 #!/bin/bash
-echo "PROCESS.....START...."
+echo "PROCESS.....START"
 
 env_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 # Create env var
 # SET OR CHANGE THIS FIRST  : Python script use them
 export GGl_PLACES_CSV="$env_dir/place_hours.csv"
+export GGl_PLACES_JSON="$env_dir/places.json"
+
 export GGL_API_KEY = ""
 export EDP_GEOSERVER_USER = ""
 export EDP_GEOSERVER_PASSWORD = ""
