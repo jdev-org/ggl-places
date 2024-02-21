@@ -18,7 +18,7 @@ We needs :
 
 Some packages will be installed by `install.sh` script :
 
-https://github.com/jdev-org/ggl-places/blob/cbf46226d84fd8b731724a8d51cf7c2331238c8b/script/python/install.sh#L9-L12
+https://github.com/jdev-org/ggl-places/blob/main/script/python/install.sh
 
 ## Install
 
