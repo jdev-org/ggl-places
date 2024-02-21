@@ -1,4 +1,5 @@
-> This scripts works in debian env
+> This scripts works with Linux
+
 > You need to adapt `.sh` scripts to works out of Linix O
 
 # ggl-places
