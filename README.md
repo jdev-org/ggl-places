@@ -1,3 +1,6 @@
+> This scripts works in debian env
+> You need to adapt `.sh` scripts to works out of Linix O
+
 # ggl-places
 
 ## What ?
@@ -18,19 +21,17 @@ https://github.com/jdev-org/ggl-places/blob/cbf46226d84fd8b731724a8d51cf7c233123
 
 ## Install
 
-* Open `start.sh` and change environment variables values :
+First, open `start.sh` and change environment variables values :
 
 https://github.com/jdev-org/ggl-places/blob/0d72c1bfaf06646104f52a7aa0cbf8b1e68a77f7/start.sh#L9-L18
 
-
-
-* To start the process, use this command with a classic (Linux) terminal :
+Next, you can start the process with this (Linux) command :
 
 > [CREATE_FILE] : `<boolean>` - `true` to force places file generation, `false` to use current and don't call API
 
 `. ./start.sh [CREATE_FILE]`
 
-### Process informations
+### Process important information
 
 - You will find a `.venv` in `script/python/` (python3)
 
@@ -50,7 +51,7 @@ https://github.com/jdev-org/ggl-places/blob/0d72c1bfaf06646104f52a7aa0cbf8b1e68a
 **Publish this new table with your favorite GIS server (e.g GeoServer)**
 
 
-## Data model explain
+## Data model explainations
 
 * Hours fields (close/open) are show in minutes to ease comparison and conversion :
 `12h30 = 12h*60min +30 = 750 min`
