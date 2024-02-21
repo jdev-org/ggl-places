@@ -18,20 +18,31 @@ https://github.com/jdev-org/ggl-places/blob/cbf46226d84fd8b731724a8d51cf7c233123
 
 ## Install
 
-* Open `start.sh` and change env variables values :
+* Open `start.sh` and change environment variables values :
 
 https://github.com/jdev-org/ggl-places/blob/0d72c1bfaf06646104f52a7aa0cbf8b1e68a77f7/start.sh#L9-L18
 
+
+
 * To start the process, use this command with a classic (Linux) terminal :
 
-`. ./start.sh`
+> [CREATE_FILE] : `<boolean>` - `true` to force places file generation, `false` to use current and don't call API
 
-Note that : 
->You will find a `.venv` in `script/python/` (python3)
->
->Process will automatically save a new `place_hours.csv` into `root` directory
->
-> Process will automatically create (or overwrite) a PostGIS table
+`. ./start.sh [CREATE_FILE]`
+
+### Process informations
+
+- You will find a `.venv` in `script/python/` (python3)
+
+- Process will automatically save a new `place_hours.csv` into `root` directory
+
+- Process will automatically create (or overwrite) a PostGIS table (name is same as CSV file)
+
+- Process will create a new `./places.json` file to allow to read API response if you don't need to request all every time
+
+- Process will create a `./places.json.error.json` file to list feature without API ID and invalid API IDs
+
+- API URI is located in `./script/python/const.py`
 
 
 ## And now ?
