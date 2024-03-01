@@ -2,12 +2,21 @@
 echo "PROCESS.....START"
 
 refresh_file="$1"
+install_env="$2"
 
 env_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-# Create env var
-# SET OR CHANGE THIS FIRST  : Python script use them
+#########
+# ENV vars :
+# SET OR CHANGE THIS FIRST  (used by Python script)
+#########
+
+# If needeed, uncomment and adapta this line to use a config.sh file
+# . /srv/script/config.sh
+
+# You can override this two file path to use full path as /srv/sctipt/gg-places/place_hours.csv
 export GGl_PLACES_CSV="$env_dir/place_hours.csv"
+# You can override this file path to use full path as /srv/sctipt/gg-places/places.json
 export GGl_PLACES_JSON="$env_dir/places.json"
 
 export GGL_API_KEY=""
@@ -28,6 +37,10 @@ process_file="$env_dir/script/python/main.py"
 
 json_file_place="$env_dir/places.json"
 
+###########
+# PROCESS
+###########
+
 if [ $refresh_file = "true" ] && [ -f "$json_file_place" ]
 then
     rm $json_file_place
@@ -36,7 +49,11 @@ else
 fi
 
 # install
-. "$install_script"
+if [ $install_env = "true" ]
+then
+    . "$install_script"
+fi
+
 # use venv to get api infos
 . "$venv_path/bin/activate"
 python "$process_file"
