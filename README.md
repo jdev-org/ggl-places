@@ -22,6 +22,21 @@ https://github.com/jdev-org/ggl-places/blob/main/script/python/install.sh
 
 ## Install
 
+If the process use a root or sudo user, you just have to go to the next section because install process is includes in `start.sh` file (need super user right to install dependancies).
+
+If you use a non superuser to trigger `start.sh` file, you have to use `install.sh` first to install dependancies and python virtual env :
+
+https://github.com/jdev-org/ggl-places/blob/main/script/python/install.sh
+
+**Commands :**
+- cd script/python
+- sudo bash install.sh
+
+Go to the next section to start the process.
+
+
+## Process
+
 First, open `start.sh` and change environment variables values :
 
 https://github.com/jdev-org/ggl-places/blob/334ca1541ec7ddac26489b32a7a8462db64b9934/start.sh#L13-L22
@@ -29,12 +44,13 @@ https://github.com/jdev-org/ggl-places/blob/334ca1541ec7ddac26489b32a7a8462db64b
 Next, you can start the process with this (Linux) command :
 
 > [CREATE_FILE] : `<boolean>` - `true` to force places file generation, `false` to use current and don't call API
+> [INSTALL] : `<boolean>` - `true` to install (need superuser) or not (if already done or trigger without superuser)
 
-`. ./start.sh [CREATE_FILE]`
+`. ./start.sh [CREATE_FILE] [INSTALL]`
 
 ### Process important information
 
-- You will find a `.venv` in `script/python/` (python3)
+- You will find a `.venv` in `script/python/` directory (python3)
 
 - Process will automatically save a new `place_hours.csv` into `root` directory
 
@@ -46,11 +62,11 @@ Next, you can start the process with this (Linux) command :
 
 - API URI is located in `./script/python/const.py`
 
+- Var env GEOSERVER_USER and GEOSERVER_PASSWORD are not required
 
 ## And now ?
 
 **Publish this new table with your favorite GIS server (e.g GeoServer)**
-
 
 ## Data model explainations
 
