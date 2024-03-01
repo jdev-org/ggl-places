@@ -39,8 +39,13 @@ URL = (
 
 # Request with authent info
 headers = {"Accept": "application/json"}
-auth = HTTPBasicAuth(GEOSERVER_USER, GEOSERVER_PWD)
-response = requests.get(URL, auth=auth, headers=headers)
+if GEOSERVER_PWD and GEOSERVER_USER:
+    auth = HTTPBasicAuth(GEOSERVER_USER, GEOSERVER_PWD)
+    auth = HTTPBasicAuth(GEOSERVER_USER, GEOSERVER_PWD)
+    response = requests.get(URL, auth=auth, headers=headers)
+else:
+    response = requests.get(URL, headers=headers)
+
 # Read WFS response
 responseJson = response.json()
 features = responseJson["features"]
