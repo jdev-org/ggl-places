@@ -2,6 +2,7 @@
 
 echo "INSTALL.....START"
 
+# Override this install path directory if necessary
 env_py_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 echo $env_py_dir
