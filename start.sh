@@ -19,12 +19,18 @@ export GGl_PLACES_CSV="$env_dir/place_hours.csv"
 # You can override this file path to use full path as /srv/sctipt/gg-places/places.json
 export GGl_PLACES_JSON="$env_dir/places.json"
 
+# If necessary, adapt or comment vars if you use a config.sh file
+
+# Required vars
 export GGL_API_KEY=""
 export EDP_GEOSERVER_USER=""
-export EDP_GEOSERVER_PASSWORD=""
-export EDP_GEOSERVER_URL=""
 export EDP_COMMERCE_LAYER=""
 
+# Not required if layer is not protected
+export EDP_GEOSERVER_PASSWORD=""
+export EDP_GEOSERVER_URL=""
+
+# Required DB vars
 export EDP_DB_NAME=""
 export EDP_DB_HOST=""
 export EDP_DB_USER=""
